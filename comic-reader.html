@@ -1,0 +1,132 @@
+<html>
+    <head>
+        <script type="text/javascript">
+            var pagenum = 1;
+            var totalpages, filepath, imgformat;
+
+            function initiate() {
+                totalpages = parseInt(document.getElementById('total_pages').value);
+                filepath   = document.getElementById('comic_location').value;
+                imgformat  = document.getElementById('img_format').value;
+
+                if(totalpages == NaN)
+                    alert('The total number of pages has to be a number.');
+
+                else {
+                    document.getElementById('comic_data').hidden = true;
+                    document.getElementById('comic_reader').hidden = false;
+                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+                }
+            }
+
+            function prevPage() {
+                if(pagenum > 1) {
+                    pagenum -= 1;
+                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+                    document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
+                    document.getElementById('status_text').innerHTML = '';
+                    document.getElementById('status_text').style = '';
+                    window.scrollTo(0,0);
+                }
+                else {
+                    document.getElementById('status_text').innerHTML = 'This is the first page of the comic';
+                    document.getElementById('status_text').style = 'background-color:#702000; color:#ffffff';
+                    window.scrollTo(0,0);
+                }
+            }
+
+            function nextPage() {
+                if(pagenum < totalpages) {
+                    pagenum += 1;
+                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+                    document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
+                    document.getElementById('status_text').innerHTML = '';
+                    document.getElementById('status_text').style = '';
+                    window.scrollTo(0,0);
+                }
+                else {
+                    document.getElementById('status_text').innerHTML = 'This is the last page of the comic';
+                    document.getElementById('status_text').style = 'background-color:#702000; color:#ffffff';
+                    window.scrollTo(0,0);
+                }
+            }
+
+            function goToPage() {
+                let target = document.getElementById('specific_page').value;
+                target = parseInt(target);
+
+                if(target == NaN) {
+                    document.getElementById('status_text').innerHTML = `Please enter a valid page number.`;
+                    document.getElementById('status_text').style = 'background-color:#702000; color:#ffffff';
+                    window.scrollTo(0,0);
+                }
+                else if(target < 1) {
+                    document.getElementById('status_text').innerHTML = `Please enter a page number that is not less than 1. ${target} is invalid.`;
+                    document.getElementById('status_text').style = 'background-color:#702000; color:#ffffff';
+                    window.scrollTo(0,0);
+                }
+                else if(target > totalpages) {
+                    document.getElementById('status_text').innerHTML = `There are only ${totalpages} pages in this comic. There is no page ${target}.`;
+                    document.getElementById('status_text').style = 'background-color:#702000; color:#ffffff';
+                    window.scrollTo(0,0);
+                }
+                else {
+                    pagenum = target;
+                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+                    document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
+                    document.getElementById('status_text').innerHTML = '';
+                    document.getElementById('status_text').style = '';
+                    window.scrollTo(0,0);
+                }
+            }
+
+            document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+        </script>
+    </head>
+
+    <body style="background-color: #303030">
+        <table id="comic_data" style="background-color:#605050; color:#ffffff; margin:auto">
+            <tr>
+                <td>Total number of pages:</td>
+                <td><input type="text" id="total_pages"></td>
+            </tr>
+
+            <tr>
+                <td>Location of the comic pages:</td>
+                <td><input type="text" id="comic_location"></td>
+            </tr>
+
+            <tr>
+                <td>Format of the images (jpg/png/...):</td>
+                <td><input type="text" id="img_format"></td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td>
+                <td><input type="button" onclick="initiate()" value=" Read Comic ">
+            </tr>
+        </table>
+
+        <table id="comic_reader" style="margin:auto" hidden>
+            <tr>
+                <td colspan="3" id="status_text"></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><img src="1.jpg" id="comic_page"></td>
+            </tr>
+
+            <tr>
+                <td style="color:#ffffff"><a onclick="prevPage()">&lt;&lt;&lt; PREVIOUS PAGE</a></td>
+                <td style="color:#ffffff" id="page_number">( PAGE 1 )</td>
+                <td style="color:#ffffff"><a onclick="nextPage()">NEXT PAGE &gt;&gt;&gt;</a></td>
+            </tr>
+
+            <tr>
+                <td style="color:#ffffff">Go to a specific page: </td>
+                <td><input type="text" id="specific_page"></td>
+                <td><input type="button" value=" Go! " onclick="goToPage()">
+            </tr>
+        </table>
+    </body>
+</html>
