@@ -1,28 +1,46 @@
+<!doctype html>
+
 <html>
     <head>
+	<meta charset="utf-8">
         <script type="text/javascript">
-            var pagenum = 1;
+            var pagenum = 1, preceding0;
             var totalpages, filepath, imgformat;
 
             function initiate() {
                 totalpages = parseInt(document.getElementById('total_pages').value);
                 filepath   = document.getElementById('comic_location').value;
                 imgformat  = document.getElementById('img_format').value;
+		preceding0 = parseInt(document.getElementById('preceding_zeros').value);
 
                 if(totalpages == NaN)
                     alert('The total number of pages has to be a number.');
 
+		else if(preceding0 == NaN)
+		    alert('The number of preceding zeros must be a number.');
+
                 else {
+
                     document.getElementById('comic_data').hidden = true;
                     document.getElementById('comic_reader').hidden = false;
-                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+		    
+		    pagenumtxt = `${'0'.repeat(preceding0)}${pagenum}`;
+                    document.getElementById('comic_page').src = `${filepath}/${pagenumtxt}.${imgformat}`;
                 }
             }
+	    
+	    function getPageName() {
+		    let numDigits = `${pagenum}`.length;
+		    let numZeros  = preceding0 - numDigits + 1;
+		    let pagename  = `${'0'.repeat(numZeros)}${pagenum}`;
+		    return pagename;
+	    }
 
             function prevPage() {
                 if(pagenum > 1) {
                     pagenum -= 1;
-                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+		    let pagenumtxt = getPageName();
+                    document.getElementById('comic_page').src = `${filepath}/${pagenumtxt}.${imgformat}`;
                     document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
                     document.getElementById('status_text').innerHTML = '';
                     document.getElementById('status_text').style = '';
@@ -38,7 +56,8 @@
             function nextPage() {
                 if(pagenum < totalpages) {
                     pagenum += 1;
-                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+		    let pagenumtxt = getPageName();
+                    document.getElementById('comic_page').src = `${filepath}/${pagenumtxt}.${imgformat}`;
                     document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
                     document.getElementById('status_text').innerHTML = '';
                     document.getElementById('status_text').style = '';
@@ -72,7 +91,8 @@
                 }
                 else {
                     pagenum = target;
-                    document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
+		    pagenumtxt = getPageName();
+                    document.getElementById('comic_page').src = `${filepath}/${pagenumtxt}.${imgformat}`;
                     document.getElementById('page_number').innerHTML = `( PAGE ${pagenum} )`;
                     document.getElementById('status_text').innerHTML = '';
                     document.getElementById('status_text').style = '';
@@ -80,7 +100,6 @@
                 }
             }
 
-            document.getElementById('comic_page').src = `${filepath}/${pagenum}.${imgformat}`;
         </script>
     </head>
 
@@ -99,6 +118,11 @@
             <tr>
                 <td>Format of the images (jpg/png/...):</td>
                 <td><input type="text" id="img_format"></td>
+            </tr>
+
+            <tr>
+                <td>Number of preceding zeros to the left of the first file's name:</td>
+                <td><input type="text" id="preceding_zeros"></td>
             </tr>
 
             <tr>
